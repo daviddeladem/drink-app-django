@@ -10,24 +10,24 @@ def drink_list(request):
     if request.method == 'GET':
         drinks = Drink.objects.all()
         seriralizer = DrinkSerializer(drinks, many=True)
-        return Response({'drinks':seriralizer.data})
+        return JsonResponse({'drinks':seriralizer.data})
     
     if request.method == 'POST':
         serializer = DrinkSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+            return JsonResponse(serializer.data, status=status.HTTP_201_CREATED)
         
 @api_view(['GET', 'PUT', 'DELETE'])
 def drink_detail(request,id):
     try:
         drink = Drink.objects.get(pk=id)
     except Drink.DoesNotExist:
-        return Response(status=status.HTTP_404_NOT_FOUND)
+        return JsonResponse(status=status.HTTP_404_NOT_FOUND)
     
     if request.method == 'GET':
         seriralizer = DrinkSerializer(drink)
-        return Response({'drink':seriralizer.data})
+        return JsonResponse({'drink':seriralizer.data})
     
     if request.method == 'PUT':
         serializer = DrinkSerializer(drink, data=request.data)
