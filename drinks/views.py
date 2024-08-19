@@ -1,9 +1,11 @@
 from  django.http import JsonResponse
 from .models import Drink
-from .serializers import DrinkSerializer
+from .serializers import DrinkSerializer, UserSerializer
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.authtoken.models import Token
+from django.contrib.auth.models import User
 
 @api_view(['GET', 'POST'])
 def drink_list(request):
@@ -39,3 +41,22 @@ def drink_detail(request,id):
     if request.method == 'DELETE':
         drink.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+    
+    
+@api_view(['POST'])
+def login(request):
+    return Response()
+
+@api_view(['POST'])
+def register(request):
+    serializer = UserSerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+        user = User.objects.get(username=request.data['username'])
+        token = Token.objects.create(user=user)
+        return Response({"token":token.key,"user":serializer.data, "status":status.HTTP_201_CREATED})
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['GET'])
+def api_token(request):
+    return Response()
