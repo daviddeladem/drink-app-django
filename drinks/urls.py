@@ -8,6 +8,7 @@ urlpatterns = [
     path('drinks/', views.drink_list),
     path('drinks/<int:id>', views.drink_detail),
     path('register', views.register),
+    path('login', views.login),
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)
